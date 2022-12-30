@@ -532,9 +532,9 @@ void EQPluginAudioProcessorEditor::paint(juce::Graphics &g)
     auto bounds = getLocalBounds();
     auto center = bounds.getCentre();
     
-    g.setFont(Font("Iosevka Term Slab", 30, 0)); //https://github.com/be5invis/Iosevka
+    g.setFont(Font("Arial", 30, 0));
     
-    String title { "PFM::C++ FOR MUSICIANS" };
+    String title { "EQ for CMAT614" };
     g.setFont(30);
     auto titleWidth = g.getCurrentFont().getStringWidth(title);
     
