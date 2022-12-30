@@ -4,6 +4,14 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="CJ" companyCopyright="CJ 2022">
   <MAINGROUP id="IQ85Du" name="EQPlugin">
+    <GROUP id="{E3CE3A3E-E884-B97A-6D42-2145D6A6D3A6}" name="utils">
+      <FILE id="hG2GId" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
+      <FILE id="TCj3v5" name="RotaryDial.cpp" compile="1" resource="0" file="Source/RotaryDial.cpp"/>
+      <FILE id="IB1CjV" name="RotaryDial.h" compile="0" resource="0" file="Source/RotaryDial.h"/>
+      <FILE id="L4zHvO" name="ToggleButton.cpp" compile="1" resource="0"
+            file="Source/ToggleButton.cpp"/>
+      <FILE id="zIPvKA" name="ToggleButton.h" compile="0" resource="0" file="Source/ToggleButton.h"/>
+    </GROUP>
     <GROUP id="{3628BBC1-DEB1-2E29-4C0B-389F1B608E6F}" name="Source">
       <FILE id="DmTEnX" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
