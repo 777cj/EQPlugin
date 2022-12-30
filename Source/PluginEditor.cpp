@@ -109,7 +109,7 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
 {
     using namespace juce;
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (Colours::black);
+    //g.fillAll (Colours::black);
 
     drawBackgroundGrid(g);
     
@@ -140,9 +140,8 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
     border.addRoundedRectangle(getRenderArea(), 4);
     border.addRectangle(getLocalBounds());
     
-    g.setColour(Colours::black);
-    
-    g.fillPath(border);
+    //g.setColour(Colours::black);
+    //g.fillPath(border);
     
     drawTextLabels(g);
     
@@ -207,7 +206,7 @@ void ResponseCurveComponent::drawBackgroundGrid(juce::Graphics &g)
     {
         auto y = jmap(gDb, -24.f, 24.f, float(bottom), float(top));
         
-        g.setColour(gDb == 0.f ? Colour(0u, 172u, 1u) : Colours::darkgrey );
+        g.setColour(gDb == 0.f ? Colours::cornflowerblue : Colours::darkgrey );
         g.drawHorizontalLine(y, left, right);
     }
 }
@@ -276,7 +275,7 @@ void ResponseCurveComponent::drawTextLabels(juce::Graphics &g)
         r.setX(getWidth() - textWidth);
         r.setCentre(r.getCentreX(), y);
         
-        g.setColour(gDb == 0.f ? Colour(0u, 172u, 1u) : Colours::lightgrey );
+        g.setColour(gDb == 0.f ? Colours::cornflowerblue : Colours::lightgrey );
         
         g.drawFittedText(str, r, juce::Justification::centredLeft, 1);
         
@@ -508,7 +507,8 @@ analyzerEnabledButtonAttachment(audioProcessor.apvts, "Analyzer Enabled", analyz
         }
     };
     
-    setSize (480, 500);
+    //set the main window size
+    setSize (1000, 600);
 }
 
 EQPluginAudioProcessorEditor::~EQPluginAudioProcessorEditor()
@@ -525,9 +525,9 @@ void EQPluginAudioProcessorEditor::paint(juce::Graphics &g)
 {
     using namespace juce;
     
-    g.fillAll (Colours::black);
+    g.fillAll (Colour(40u, 40u, 40u));
     
-    Path curve;
+    //Path curve;
     
     auto bounds = getLocalBounds();
     auto center = bounds.getCentre();
@@ -538,11 +538,11 @@ void EQPluginAudioProcessorEditor::paint(juce::Graphics &g)
     g.setFont(30);
     auto titleWidth = g.getCurrentFont().getStringWidth(title);
     
-    curve.startNewSubPath(center.x, 32);
-    curve.lineTo(center.x - titleWidth * 0.45f, 32);
+    //curve.startNewSubPath(center.x, 32);
+    //curve.lineTo(center.x - titleWidth * 0.45f, 32);
     
-    auto cornerSize = 20;
-    auto curvePos = curve.getCurrentPosition();
+    //auto cornerSize = 20;
+    /*auto curvePos = curve.getCurrentPosition();
     curve.quadraticTo(curvePos.getX() - cornerSize, curvePos.getY(),
                       curvePos.getX() - cornerSize, curvePos.getY() - 16);
     curvePos = curve.getCurrentPosition();
@@ -552,18 +552,18 @@ void EQPluginAudioProcessorEditor::paint(juce::Graphics &g)
     curve.lineTo({0.f, 2.f});
     curve.lineTo(0.f, 0.f);
     curve.lineTo(center.x, 0.f);
-    curve.closeSubPath();
+    curve.closeSubPath();*/
     
-    g.setColour(Colour(97u, 18u, 167u));
-    g.fillPath(curve);
+    //g.setColour(Colour(97u, 18u, 167u));
+    //g.fillPath(curve);
     
-    curve.applyTransform(AffineTransform().scaled(-1, 1));
-    curve.applyTransform(AffineTransform().translated(getWidth(), 0));
-    g.fillPath(curve);
+    //curve.applyTransform(AffineTransform().scaled(-1, 1));
+    //curve.applyTransform(AffineTransform().translated(getWidth(), 0));
+    //g.fillPath(curve);
     
     
     g.setColour(Colour(255u, 154u, 1u));
-    g.drawFittedText(title, bounds, juce::Justification::centredTop, 1);
+    g.drawFittedText(title, bounds, juce::Justification::bottomLeft, 1);
     
     g.setColour(Colours::grey);
     g.setFont(14);
@@ -574,7 +574,7 @@ void EQPluginAudioProcessorEditor::paint(juce::Graphics &g)
     auto buildDate = Time::getCompilationDate().toString(true, false);
     auto buildTime = Time::getCompilationDate().toString(false, true);
     g.setFont(12);
-    g.drawFittedText("Build: " + buildDate + "\n" + buildTime, highCutSlopeSlider.getBounds().withY(6), Justification::topRight, 2);
+    g.drawFittedText("Build: " + buildDate + "\n" + buildTime, highCutSlopeSlider.getBounds().withY(6), Justification::bottomRight, 2);
 }
 
 void EQPluginAudioProcessorEditor::resized()
@@ -595,25 +595,30 @@ void EQPluginAudioProcessorEditor::resized()
     float hRatio = 25.f / 100.f; //JUCE_LIVE_CONSTANT(25) / 100.f;
     auto responseArea = bounds.removeFromTop(bounds.getHeight() * hRatio); //change from 0.33 to 0.25 because I needed peak hz text to not overlap the slider thumb
 
-    responseCurveComponent.setBounds(responseArea);
+    //set the size of the response curve object
+    responseCurveComponent.setBounds(10, 50, (getWidth()*0.50f)-10, getHeight()-100);
     
     bounds.removeFromTop(5);
+
+    int halfWidth = getWidth() / 2;
+    int column = halfWidth / 3;
     
-    auto lowCutArea = bounds.removeFromLeft(bounds.getWidth() * 0.33);
-    auto highCutArea = bounds.removeFromRight(bounds.getWidth() * 0.5);
+    juce::Rectangle<int> lowCutArea (halfWidth, 50, column, 300);
+    juce::Rectangle<int>  peakArea (halfWidth+column, 50, column, 300);
+    juce::Rectangle<int>  highCutArea (halfWidth + column + column, 50, column, 300);
     
     lowcutBypassButton.setBounds(lowCutArea.removeFromTop(25));
     lowCutFreqSlider.setBounds(lowCutArea.removeFromTop(lowCutArea.getHeight() * 0.5));
     lowCutSlopeSlider.setBounds(lowCutArea);
     
+    peakBypassButton.setBounds(peakArea.removeFromTop(25));
+    peakFreqSlider.setBounds(peakArea.removeFromTop(peakArea.getHeight() * 0.33));
+    peakGainSlider.setBounds(peakArea.removeFromTop(peakArea.getHeight() * 0.5));
+    peakQualitySlider.setBounds(peakArea);
+
     highcutBypassButton.setBounds(highCutArea.removeFromTop(25));
     highCutFreqSlider.setBounds(highCutArea.removeFromTop(highCutArea.getHeight() * 0.5));
     highCutSlopeSlider.setBounds(highCutArea);
-    
-    peakBypassButton.setBounds(bounds.removeFromTop(25));
-    peakFreqSlider.setBounds(bounds.removeFromTop(bounds.getHeight() * 0.33));
-    peakGainSlider.setBounds(bounds.removeFromTop(bounds.getHeight() * 0.5));
-    peakQualitySlider.setBounds(bounds);
 }
 
 std::vector<juce::Component*> EQPluginAudioProcessorEditor::getComps()
