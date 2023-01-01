@@ -3,7 +3,7 @@
 
     ToggleButton.cpp
     Created: 30 Dec 2022 9:24:29pm
-    Author:  themo
+    Author:  CJ
 
   ==============================================================================
 */
@@ -21,44 +21,47 @@ void LookAndFeel::drawToggleButton(juce::Graphics& g,
     {
         Path powerButton;
 
-        auto bounds = toggleButton.getLocalBounds();
+        const auto bounds = toggleButton.getLocalBounds();
 
         auto size = jmin(bounds.getWidth(), bounds.getHeight()) - 6;
         auto r = bounds.withSizeKeepingCentre(size, size).toFloat();
-
-        float ang = 30.f; //30.f;
-
         size -= 6;
-
-        powerButton.addCentredArc(r.getCentreX(),
-            r.getCentreY(),
-            size * 0.5,
-            size * 0.5,
-            0.f,
-            degreesToRadians(ang),
-            degreesToRadians(360.f - ang),
-            true);
-
-        powerButton.startNewSubPath(r.getCentreX(), r.getY());
-        powerButton.lineTo(r.getCentre());
-
         PathStrokeType pst(2.f, PathStrokeType::JointStyle::curved);
 
-        auto color = toggleButton.getToggleState() ? Colours::dimgrey : Colour(0u, 172u, 1u);
+        auto color = toggleButton.getToggleState() ? Colours::dimgrey : Colours::cornflowerblue;
 
-        g.setColour(color);
         g.strokePath(powerButton, pst);
-        g.drawEllipse(r, 2);
-    }
-    else if (auto* analyzerButton = dynamic_cast<AnalyzerButton*>(&toggleButton))
-    {
-        auto color = !toggleButton.getToggleState() ? Colours::dimgrey : Colour(0u, 172u, 1u);
-
         g.setColour(color);
+        g.drawEllipse(r, 2);
 
-        auto bounds = toggleButton.getLocalBounds();
-        g.drawRect(bounds);
+        const juce::Image image = juce::ImageCache::getFromMemory(BinaryData::power_png, BinaryData::power_pngSize);
+        g.drawImage(image, bounds.toFloat(), RectanglePlacement::stretchToFit);
 
-        g.strokePath(analyzerButton->randomPath, PathStrokeType(1.f));
+        g.strokePath(powerButton, pst);
+
+    }
+    else if (auto* ab = dynamic_cast<AnalyzerButton*>(&toggleButton))
+    {
+        Path analyzerButton;
+
+        const auto bounds = toggleButton.getLocalBounds();
+
+        auto size = jmin(bounds.getWidth(), bounds.getHeight()) - 6;
+        auto r = bounds.withSizeKeepingCentre(size, size).toFloat();
+        size -= 6;
+        PathStrokeType pst(2.f, PathStrokeType::JointStyle::curved);
+
+        auto color = toggleButton.getToggleState() ? Colours::dimgrey : Colours::cornflowerblue;
+
+        g.strokePath(analyzerButton, pst);
+        g.setColour(color);
+        g.drawEllipse(r, 2);
+
+        const juce::Image image = juce::ImageCache::getFromMemory(BinaryData::chart_png, BinaryData::chart_pngSize);
+        const juce::Rectangle imgBounds(bounds.getX()+10, bounds.getX()+10, bounds.getWidth()-20, bounds.getHeight()-20);
+        g.drawImage(image, imgBounds.toFloat(), RectanglePlacement::stretchToFit);
+
+        g.strokePath(analyzerButton, pst);
     }
 }
+

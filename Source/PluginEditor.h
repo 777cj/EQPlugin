@@ -264,6 +264,12 @@ private:
     highCutFreqSlider,
     lowCutSlopeSlider,
     highCutSlopeSlider;
+
+    juce::Rectangle<int> lowCutArea,
+        peakArea,
+        highCutArea,
+        analyzerCtrlsArea,
+        analyzerChartArea;
     
     ResponseCurveComponent responseCurveComponent;
     

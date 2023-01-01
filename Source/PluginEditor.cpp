@@ -108,8 +108,6 @@ void ResponseCurveComponent::updateResponseCurve()
 void ResponseCurveComponent::paint (juce::Graphics& g)
 {
     using namespace juce;
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    //g.fillAll (Colours::black);
 
     drawBackgroundGrid(g);
     
@@ -139,9 +137,6 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
     
     border.addRoundedRectangle(getRenderArea(), 4);
     border.addRectangle(getLocalBounds());
-    
-    //g.setColour(Colours::black);
-    //g.fillPath(border);
     
     drawTextLabels(g);
     
@@ -521,104 +516,75 @@ EQPluginAudioProcessorEditor::~EQPluginAudioProcessorEditor()
 }
 
 //==============================================================================
-void EQPluginAudioProcessorEditor::paint(juce::Graphics &g)
+void EQPluginAudioProcessorEditor::paint(juce::Graphics& g)
 {
     using namespace juce;
-    
-    g.fillAll (Colour(40u, 40u, 40u));
-    
+
+    g.fillAll(Colour(40u, 40u, 40u));
+
     //Path curve;
-    
+
     auto bounds = getLocalBounds();
     auto center = bounds.getCentre();
-    
+
     g.setFont(Font("Arial", 30, 0));
-    
-    String title { "EQ for CMAT614" };
+
+    String title{ "EQ for CMAT614 by CJ" };
     g.setFont(30);
     auto titleWidth = g.getCurrentFont().getStringWidth(title);
-    
-    //curve.startNewSubPath(center.x, 32);
-    //curve.lineTo(center.x - titleWidth * 0.45f, 32);
-    
-    //auto cornerSize = 20;
-    /*auto curvePos = curve.getCurrentPosition();
-    curve.quadraticTo(curvePos.getX() - cornerSize, curvePos.getY(),
-                      curvePos.getX() - cornerSize, curvePos.getY() - 16);
-    curvePos = curve.getCurrentPosition();
-    curve.quadraticTo(curvePos.getX(), 2,
-                      curvePos.getX() - cornerSize, 2);
-    
-    curve.lineTo({0.f, 2.f});
-    curve.lineTo(0.f, 0.f);
-    curve.lineTo(center.x, 0.f);
-    curve.closeSubPath();*/
-    
-    //g.setColour(Colour(97u, 18u, 167u));
-    //g.fillPath(curve);
-    
-    //curve.applyTransform(AffineTransform().scaled(-1, 1));
-    //curve.applyTransform(AffineTransform().translated(getWidth(), 0));
-    //g.fillPath(curve);
-    
-    
-    g.setColour(Colour(255u, 154u, 1u));
-    g.drawFittedText(title, bounds, juce::Justification::bottomLeft, 1);
-    
-    g.setColour(Colours::grey);
+
+    g.setColour(Colours::orange);
+    g.drawFittedText(title, juce::Rectangle(10,bounds.getHeight()-40, titleWidth, 30), juce::Justification::bottomLeft, 1);
+
+    float textPos = 30.0f;
+    g.setColour(Colours::white);
     g.setFont(14);
-    g.drawFittedText("LowCut", lowCutSlopeSlider.getBounds(), juce::Justification::centredBottom, 1);
-    g.drawFittedText("Peak", peakQualitySlider.getBounds(), juce::Justification::centredBottom, 1);
-    g.drawFittedText("HighCut", highCutSlopeSlider.getBounds(), juce::Justification::centredBottom, 1);
-    
-    auto buildDate = Time::getCompilationDate().toString(true, false);
-    auto buildTime = Time::getCompilationDate().toString(false, true);
-    g.setFont(12);
-    g.drawFittedText("Build: " + buildDate + "\n" + buildTime, highCutSlopeSlider.getBounds().withY(6), Justification::bottomRight, 2);
+    g.drawFittedText("LowCut", lowCutArea.getX(), textPos, lowCutArea.getWidth(), lowCutArea.getHeight(), juce::Justification::centredTop, 1);
+    g.drawFittedText("Peak", peakArea.getX(), textPos, peakArea.getWidth(), peakArea.getHeight(), juce::Justification::centredTop, 1);
+    g.drawFittedText("HighCut", highCutArea.getX(), textPos, highCutArea.getWidth(), highCutArea.getHeight(), juce::Justification::centredTop, 1);
 }
 
 void EQPluginAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
     bounds.removeFromTop(4);
+    float halfWidth = getWidth() / 2;
+    float column = halfWidth / 3;
+    float dialWidth = column * 0.9f;
+    float btnWidth = column * 0.3f;
+    float dialXPos = (column / 2.0f) - (dialWidth / 2.0f);
+    float btnXPos = (column / 2.0f) - (btnWidth / 2.0f);
+
+    //place button control areas    
+    lowCutArea.setBounds(halfWidth, 50, column, 500);
+    peakArea.setBounds(halfWidth+column, 50, column, 500);
+    highCutArea.setBounds(halfWidth + column + column, 50, column, 500);
     
-    auto analyzerEnabledArea = bounds.removeFromTop(25);
+    lowcutBypassButton.setBounds(lowCutArea.getX() + btnXPos, lowCutArea.getHeight(), btnWidth, btnWidth);
+    lowCutFreqSlider.setBounds(lowCutArea.getX() + dialXPos, lowCutArea.getHeight() * 0.2, dialWidth, dialWidth);
+    lowCutSlopeSlider.setBounds(lowCutArea.getX() + dialXPos, lowCutFreqSlider.getY() + dialWidth, dialWidth, dialWidth);
     
-    analyzerEnabledArea.setWidth(50);
-    analyzerEnabledArea.setX(5);
-    analyzerEnabledArea.removeFromTop(2);
-    
-    analyzerEnabledButton.setBounds(analyzerEnabledArea);
-    
-    bounds.removeFromTop(5);
-    
+    peakBypassButton.setBounds(peakArea.getX() + btnXPos, peakArea.getHeight(), btnWidth, btnWidth);
+    peakFreqSlider.setBounds(peakArea.getX() + dialXPos, peakArea.getHeight() * 0.1, dialWidth, dialWidth);
+    peakGainSlider.setBounds(peakArea.getX() + dialXPos, peakFreqSlider.getY() + dialWidth, dialWidth, dialWidth);
+    peakQualitySlider.setBounds(peakArea.getX() + dialXPos, peakGainSlider.getY() + dialWidth, dialWidth, dialWidth);
+
+    highcutBypassButton.setBounds(highCutArea.getX() + btnXPos, highCutArea.getHeight(), btnWidth, btnWidth);
+    highCutFreqSlider.setBounds(highCutArea.getX() + dialXPos, highCutArea.getHeight() * 0.2, dialWidth, dialWidth);
+    highCutSlopeSlider.setBounds(highCutArea.getX() + dialXPos, highCutFreqSlider.getY() + dialWidth, dialWidth, dialWidth);
+
+    //analyzer area
     float hRatio = 25.f / 100.f; //JUCE_LIVE_CONSTANT(25) / 100.f;
-    auto responseArea = bounds.removeFromTop(bounds.getHeight() * hRatio); //change from 0.33 to 0.25 because I needed peak hz text to not overlap the slider thumb
+    analyzerChartArea.setBounds(10, 30, halfWidth-10, lowCutArea.getHeight()-30);
+    //auto responseArea = bounds.removeFromTop(bounds.getHeight() * hRatio); //change from 0.33 to 0.25 because I needed peak hz text to not overlap the slider thumb
 
     //set the size of the response curve object
-    responseCurveComponent.setBounds(10, 50, (getWidth()*0.50f)-10, getHeight()-100);
-    
-    bounds.removeFromTop(5);
+    responseCurveComponent.setBounds(analyzerChartArea.getX(), analyzerChartArea.getY(), analyzerChartArea.getWidth(), analyzerChartArea.getHeight());
 
-    int halfWidth = getWidth() / 2;
-    int column = halfWidth / 3;
-    
-    juce::Rectangle<int> lowCutArea (halfWidth, 50, column, 300);
-    juce::Rectangle<int>  peakArea (halfWidth+column, 50, column, 300);
-    juce::Rectangle<int>  highCutArea (halfWidth + column + column, 50, column, 300);
-    
-    lowcutBypassButton.setBounds(lowCutArea.removeFromTop(25));
-    lowCutFreqSlider.setBounds(lowCutArea.removeFromTop(lowCutArea.getHeight() * 0.5));
-    lowCutSlopeSlider.setBounds(lowCutArea);
-    
-    peakBypassButton.setBounds(peakArea.removeFromTop(25));
-    peakFreqSlider.setBounds(peakArea.removeFromTop(peakArea.getHeight() * 0.33));
-    peakGainSlider.setBounds(peakArea.removeFromTop(peakArea.getHeight() * 0.5));
-    peakQualitySlider.setBounds(peakArea);
-
-    highcutBypassButton.setBounds(highCutArea.removeFromTop(25));
-    highCutFreqSlider.setBounds(highCutArea.removeFromTop(highCutArea.getHeight() * 0.5));
-    highCutSlopeSlider.setBounds(highCutArea);
+    //analyzer area and button
+    analyzerCtrlsArea.setBounds(0, lowCutArea.getHeight(), halfWidth, btnWidth);
+    float aBtnXPos = (analyzerCtrlsArea.getWidth() / 2.0f) - (btnWidth / 2.0f);
+    analyzerEnabledButton.setBounds(aBtnXPos, analyzerCtrlsArea.getY(), btnWidth, btnWidth);
 }
 
 std::vector<juce::Component*> EQPluginAudioProcessorEditor::getComps()
