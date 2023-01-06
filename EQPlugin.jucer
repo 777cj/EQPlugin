@@ -5,8 +5,8 @@
               companyName="CJ" companyCopyright="CJ 2022">
   <MAINGROUP id="IQ85Du" name="EQPlugin">
     <GROUP id="{1EF7B982-94B3-4486-6759-D816B6010150}" name="assets">
-      <FILE id="B7u0Ra" name="chart.png" compile="0" resource="1" file="../../EQPlugin/Source/chart.png"/>
-      <FILE id="Z00d7s" name="power.png" compile="0" resource="1" file="../../EQPlugin/Source/power.png"/>
+      <FILE id="qEcMuf" name="chart.png" compile="0" resource="1" file="Source/chart.png"/>
+      <FILE id="hI1Tb6" name="power.png" compile="0" resource="1" file="Source/power.png"/>
     </GROUP>
     <GROUP id="{E3CE3A3E-E884-B97A-6D42-2145D6A6D3A6}" name="utils">
       <FILE id="hG2GId" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
