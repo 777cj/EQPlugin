@@ -534,7 +534,7 @@ void EQPluginAudioProcessorEditor::paint(juce::Graphics& g)
     auto titleWidth = g.getCurrentFont().getStringWidth(title);
 
     g.setColour(Colours::orange);
-    g.drawFittedText(title, juce::Rectangle(10,bounds.getHeight()-40, titleWidth, 30), juce::Justification::bottomLeft, 1);
+    g.drawFittedText(title, juce::Rectangle<int>(10,bounds.getHeight()-40, titleWidth, 30), juce::Justification::bottomLeft, 1);
 
     float textPos = 30.0f;
     g.setColour(Colours::white);

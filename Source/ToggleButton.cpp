@@ -58,7 +58,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics& g,
         g.drawEllipse(r, 2);
 
         const juce::Image image = juce::ImageCache::getFromMemory(BinaryData::chart_png, BinaryData::chart_pngSize);
-        const juce::Rectangle imgBounds(bounds.getX()+10, bounds.getX()+10, bounds.getWidth()-20, bounds.getHeight()-20);
+        const juce::Rectangle<float> imgBounds(bounds.getX()+10, bounds.getX()+10, bounds.getWidth()-20, bounds.getHeight()-20);
         g.drawImage(image, imgBounds.toFloat(), RectanglePlacement::stretchToFit);
 
         g.strokePath(analyzerButton, pst);
